@@ -2,17 +2,6 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -22,10 +11,18 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  position: relative; /* Ensure relative positioning for overlapping images */
 }
 
-.App-link {
-  color: #61dafb;
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+  animation: App-logo-spin infinite 20s linear;
+  transition: opacity 0.3s ease;
+}
+
+.App-logo:hover {
+  opacity: 0;
 }
 
 @keyframes App-logo-spin {
@@ -35,4 +32,59 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+/* AddSubredditForm styles */
+form {
+  margin-bottom: 20px;
+}
+
+input {
+  padding: 10px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #61dafb;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #4ca9e4;
+}
+
+/* SubredditList styles */
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+/* Adjust layout for smaller screens */
+@media screen and (max-width: 768px) {
+  .App-header {
+    padding: 20px;
+  }
+  .App-logo {
+    height: 20vmin;
+  }
+  input, button {
+    font-size: 14px;
+  }
+}
+
+/* Custom Fonts */
+body {
+  font-family: 'Mulish', sans-serif; 
 }
