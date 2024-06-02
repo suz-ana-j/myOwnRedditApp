@@ -1,5 +1,9 @@
 import logo from './logo.svg';
 import './App.css';
+import AddSubredditForm from './AddSubredditForm.js';
+import SubredditList from './SubredditList.js';
+
+
 
 function App() {
   return (
@@ -17,6 +21,8 @@ function App() {
         >
           Learn React
         </a>
+        <AddSubredditForm />
+        <SubredditList />
       </header>
     </div>
   );
