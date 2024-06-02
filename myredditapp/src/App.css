@@ -88,3 +88,26 @@ li {
 body {
   font-family: 'Mulish', sans-serif; 
 }
+
+/* dotted line after each overlapping post, and no dotted line on smaller screens */
+li {
+  margin-bottom: 10px;
+  position: relative; /* Ensure relative positioning for pseudo-element */
+}
+
+li::after {
+  content: '';
+  position: absolute;
+  bottom: -5px; /* Adjust this value as needed */
+  left: 0;
+  width: 100%; /* Make the line extend the full width of the container */
+  border-bottom: 1px dotted #ccc; /* Dotted line style */
+}
+
+/* Adjust layout for smaller screens */
+@media screen and (max-width: 768px) {
+  /* Styles for smaller screens */
+  li::after {
+    display: none; /* Hide the dotted line on smaller screens */
+  }
+}
