@@ -1,35 +1,62 @@
-/* oAuth2 code to connect my code to the reddit API */ 
+// Authorization page for users 
 
-const express = require('express'); 
-const axios = require('axios'); 
+const express = require('express');
+const axios = require('axios');
+const bodyParser = require('body-parser');
+require('dotenv').config();
 
-// Create Express app 
-const app = express(); 
-// Define route to handle authorization code
- app.get('/auth/callback', (req, res) => { 
-// Extract authorization code from query parameters 
-const authorizationCode = req.query.code; 
+const app = express();
+const port = 3000;
 
-// Exchange authorization code for access token
- axios.post('https://www.reddit.com/api/v1/access_token', { 
-      grant_type: 'authorization_code', 
-      code: authorizationCode, 
-      redirect_uri: 'http://localhost', 
-        client_id: 'E3v4v0jXqg_1xjCmb1HvUw', 
-         client_secret: 'u1jOvsyDiTIsoWfQ-g_CeDrpbJ8YRQ';
+app.use(bodyParser.urlencoded({ extended: true }));
 
- }) .then(response => {
- // Handle successful response
- const accessToken = response.data.access_token; 
+const clientId = process.env.CLIENT_ID;
+const clientSecret = process.env.CLIENT_SECRET;
+const redirectUri = process.env.REDIRECT_URI;
 
-// Use the access token to make authenticated requests to Reddit API 
-// Redirect user or send response back to client 
-      res.send('Access token obtained: ' + accessToken);
- }) .catch(error => {
- // Handle error
-       console.error('Error exchanging authorization code for access token:', error); 
-// Send error response back to client 
-      res.status(500).send('Error exchanging authorization code for access token'); }); });
+// Step 1: Redirect the user to Reddit's authorization URL
+app.get('/auth', (req, res) => {
+  const authUrl = `https://www.reddit.com/api/v1/authorize?client_id=${clientId}&response_type=code&state=random_string&redirect_uri=${redirectUri}&duration=temporary&scope=read`;
+  res.redirect(authUrl);
+});
 
- // Start the Express server 
-      app.listen(3000, () => { console.log('Server is running on port 3000'); });
+// Step 2: Handle the callback from Reddit
+app.get('/callback', async (req, res) => {
+  const { code } = req.query;
+
+  try {
+    // Step 3: Exchange the authorization code for an access token
+    const response = await axios.post('https://www.reddit.com/api/v1/access_token', null, {
+      params: {
+        grant_type: 'authorization_code',
+        code: code,
+        redirect_uri: redirectUri
+      },
+      auth: {
+        username: clientId,
+        password: clientSecret
+      },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    });
+
+    const { access_token } = response.data;
+
+    // Step 4: Use the access token to make an API request
+    const result = await axios.get('https://oauth.reddit.com/api/v1/me', {
+      headers: {
+        Authorization: `Bearer ${access_token}`
+      }
+    });
+
+    res.send(result.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred');
+  }
+});
+
+app.listen(port, () => {
+  console.log(`App listening at http://localhost:${port}`);
+});
