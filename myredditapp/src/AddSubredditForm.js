@@ -2,6 +2,19 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addSubreddit } from './subredditSlice';
 
+const categories = [
+  'Technology',
+  'Science',
+  'Gaming',
+  'Movies',
+  'Music',
+  'Books',
+  'Art',
+  'Sports',
+  'News',
+  'Other'
+];
+
 const AddSubredditForm = () => {
   const [inputValue, setInputValue] = useState('');
   const dispatch = useDispatch();
